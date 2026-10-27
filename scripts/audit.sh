@@ -48,4 +48,4 @@ check "В каталоге ресурса нет файлов с правами 
 
 check "Права ключа devops.key равны 600" "600" "$(sudo stat -c '%a' /etc/ssl/private/devops.key 2>/dev/null || echo 'missing')"
 echo "Пройденно: $PASS, не пройдено $FAIL"
-[[ $FAIL -eq 0]] && exit 0 || exit 1
+[[ $FAIL -eq 0 ]] && exit 0 || exit 1
