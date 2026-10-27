@@ -55,3 +55,17 @@ sudo ufw status verbose
 ## 7. Сникм
 1. 01-clean-install сразу после установки
 2. 03-ssh-hardenend после настройки ssh
+
+## 8. Веб-сервер
+1. Установи nginx и проверь состояния в systemctl
+2. Настрой конфиг в /etc/nginx/sites-available/{name}
+3. Впиши туда 80 порт и 443 в отдельные блоки server {}. 80 отдает 301, 443 конфигурирует нормальное место
+4. Каталог должен быть в /var/www/ и иметь chown user:user (твой!)
+5. Создаешь самоподписанный ключ через openssl на 365 дней rsa:2048 самоподписанный
+Директории ключей /etc/ssl/pricate/name.key /etc/ssl/certs/name.crt (сертификат)
+Права ключа 1155 серт 1708. команда создания
+sudo openssl req -x509 -nodes 365 -newkey rsa:2048 \
+ -keyout /etc/ssl/private/name.key \
+ -out /etc/ssl/certs/name.crt \
+ -subj "/CN=devops.local" \
+ -addtext "subjectAltName=DNS:devops.local"
