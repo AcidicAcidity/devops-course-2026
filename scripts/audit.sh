@@ -35,8 +35,6 @@ check "Политика по умолчанию для входящего тра
 echo "[3] Учётные записи"
 awk -F: '$3>=1000 && $3<65534 {printf "    %s (uid=%s)\n",$1,$3}' /etc/passwd
 
-echo "Пройдено: $PASS, не пройдено: $FAIL"
-[[ $FAIL -eq 0 ]] && exit 0 || exit 1
 echo "[4] Веб-сервер"
 check "Служба nginx активна" "active" "$(systemctl is-active nginx 2>/dev/null || echo 'inactive')"
 
@@ -49,3 +47,5 @@ check "Сертификат истекает не ранее чем через 3
 check "В каталоге ресурса нет файлов с правами o+w" "0" "$(sudo find /var/www/devops-site -type f -perm o+w 2>/dev/null | wc -l | tr -d ' ')"
 
 check "Права ключа devops.key равны 600" "600" "$(sudo stat -c '%a' /etc/ssl/private/devops.key 2>/dev/null || echo 'missing')"
+echo "Пройденно: $PASS, не пройдено $FAIL"
+[[ $FAIL -eq 0]] && exit 0 || exit 1
