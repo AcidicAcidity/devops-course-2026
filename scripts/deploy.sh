@@ -5,7 +5,7 @@
 
 set -euo pipefail
 
-REMOTE="devops" # Использует настройки из ~/.ssh/config
+REMOTE="devops.local" # Использует настройки из ~/.ssh/config
 REMOTE_DIR="/var/www/devops-site"
 SITE_URL="https://devops.local"
 CA_CERT="${HOME}/devops.crt"
