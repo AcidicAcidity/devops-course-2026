@@ -4,10 +4,11 @@ RUN useradd --system --no-create-home app
 
 WORKDIR /app
 
-COPY requirements.txt
+COPY requirements.txt .
+RUN pip install --upgrade pip
 RUN pip install --no-cache-dir -r requirements.txt
 
-COPY app.py
+COPY app.py .
 
 USER app
 

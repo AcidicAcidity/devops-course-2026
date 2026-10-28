@@ -47,5 +47,15 @@ check "Сертификат истекает не ранее чем через 3
 check "В каталоге ресурса нет файлов с правами o+w" "0" "$(sudo find /var/www/devops-site -type f -perm o+w 2>/dev/null | wc -l | tr -d ' ')"
 
 check "Права ключа devops.key равны 600" "600" "$(sudo stat -c '%a' /etc/ssl/private/devops.key 2>/dev/null || echo 'missing')"
+
+echo "[5] Контейнеризация"
+
+check "Служба docker активна" "active" "$(systemctl is-active docker 2>/dev/null || echo 'inactive')"
+
+check "Контейнер СУБД в состоянии healthy" "healthy" "$(sudo docker inspect -f '{{.State.Health.Status}}' app-db-1 2>/dev/null || echo 'missing')"
+
+check "Порты 5000 и 5432 не прослушиваются вне localhost" "0" "$(ss -tln | awk '$4 ~ /:(5000|5432)$/ && $4 !~ /^(127\.0\.0\.1|\[::1\])/' | wc -l | tr -d ' ')"
+
+check "Права файла ~/app/.env равны 600" "600" "$(stat -c '%a' ~/app/.env 2>/dev/null || echo 'missing')"
 echo "Пройденно: $PASS, не пройдено $FAIL"
 [[ $FAIL -eq 0 ]] && exit 0 || exit 1
