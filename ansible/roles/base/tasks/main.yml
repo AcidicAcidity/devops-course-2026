@@ -10,7 +10,7 @@
 
       - ansible_distribution_version is version("24.04", "==")
 
-      - ansible_architecture == "x86_64"
+      - ansible_architecture in ["x86_64", "aarch64", "arm64"]
 
     fail_msg: "Требуется Ubuntu Server 24.04 amd64"
 
@@ -36,6 +36,10 @@
 
       - python3-requests
 
+      - qemu-user-static
+
+      - binfmt-support
+
     state: present
 
     update_cache: true
@@ -58,7 +62,7 @@
 
     components: [stable]
 
-    architectures: [amd64]
+    architectures: ["{{ 'arm64' if ansible_architecture == 'aarch64' else 'amd64' }}"]
 
     signed_by: https://download.docker.com/linux/ubuntu/gpg
 

@@ -14,15 +14,14 @@
 
 - name: Pull reviewed application image
 
-  community.docker.docker_image:
+  community.docker.docker_image_pull:
 
     name: "{{ app_image }}"
 
     tag: "{{ app_tag }}"
 
-    source: pull
+    platform: linux/amd64
 
-    state: present
 
 
 
@@ -37,6 +36,8 @@
     state: started
 
     restart_policy: unless-stopped
+
+    platform: linux/amd64
 
     published_ports:
 
