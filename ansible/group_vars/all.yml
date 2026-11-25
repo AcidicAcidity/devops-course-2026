@@ -1,0 +1,6 @@
+---
+app_image: "ghcr.io/acidicacidity/devops-ci-app"
+app_tag: "d59632026dd535e8b4ce63278110ba6436fc9520"
+app_container_name: "devops-ci-app"
+app_host_port: 5000
+app_internal_port: 5000
