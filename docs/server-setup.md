@@ -69,3 +69,37 @@ sudo openssl req -x509 -nodes 365 -newkey rsa:2048 \
  -out /etc/ssl/certs/name.crt \
  -subj "/CN=devops.local" \
  -addtext "subjectAltName=DNS:devops.local"
+
+
+## 10. Ansible (по факту 9)
+
+**Расположение проекта:** Каталог `ansible/` в корне репозитория `devops-course-2026`.
+
+**Управляющий узел:** Хостовая система (macOS) с установленным Ansible и утилитой `sshpass`.
+
+**Управляемый узел:** Виртуальная машина (Ubuntu Server 24.04), доступная по Host-only сети (IP-адрес: 192.168.56.3).
+
+**Inventory:**
+* `ansible/inventory/bootstrap.ini` — используется для первичной настройки.
+* `ansible/inventory/prod.ini` — используется для последующих запусков и аудита.
+
+**Учётные записи:**
+* **bootstrap:** Пользователь `student` (первичный доступ по паролю).
+* **prod:** Пользователь `devops` (доступ по SSH-ключу, настроен беспарольный sudo).
+
+**Роли и их ответственность:**
+* `base`: Проверка ОС, установка базовых пакетов, добавление официального репозитория Docker и установка Docker Engine.
+* `ssh`: Создание пользователя `devops`, установка публичного ключа, настройка NOPASSWD sudo, hardening SSH (отключение входа по паролю), настройка UFW.
+* `nginx`: Установка Nginx, настройка reverse proxy для приложения, отключение дефолтного сайта.
+* `app`: Загрузка Docker-образа, запуск контейнера приложения (с привязкой к localhost), ожидание успешного прохождения health-check.
+
+**Параметры приложения:**
+* **Адрес образа GHCR:** `ghcr.io/acidicacidity/devops-ci-app`
+* **Полный SHA:** `d59632026dd535e8b4ce63278110ba6436fc9520`
+* **Порт контейнера:** `5000` (опубликован как `127.0.0.1:5000`)
+* **Health endpoint:** `http://127.0.0.1:5000/health` (возвращает статус 200 и `{"status": "ok"}`)
+
+**Команды управления:**
+* **Первичный запуск (Bootstrap):**
+  ```bash
+  ansible-playbook -i inventory/bootstrap.ini site.yml --ask-pass --ask-become-pass
